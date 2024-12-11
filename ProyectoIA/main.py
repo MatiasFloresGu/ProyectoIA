@@ -1,53 +1,84 @@
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 
-# Definir el laberinto (0 = libre, 1 = pared)
-laberinto = np.array([
-    [0, 1, 0, 0, 0],
-    [0, 1, 0, 1, 0],
-    [0, 0, 0, 1, 0],
-    [0, 1, 0, 0, 0],
-    [0, 0, 0, 1, 0]
-])
 
-# Establecer las posiciones de inicio y meta
-start = (0, 0)
-goal = (4, 4)
+
+maze = [
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1],
+    [1,1,1,0,1,0,1,1,1,1,0,1,1,1,0,1,0,1,1,1],
+    [1,0,0,0,1,0,1,0,0,1,0,0,0,0,0,1,0,0,0,1],
+    [1,0,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,0,1],
+    [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1],
+    [1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,1],
+    [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1],
+    [1,0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,1],
+    [1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1],
+    [1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1],
+    [1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,0,1],
+    [1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,1],
+    [1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1],
+    [1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1],
+    [1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+    [1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+]
+
+
+start = (1,1)
+goal = (18,18)
+
+maze_array = np.array(maze)
+
+
+plt.figure(figsize=(10,10))
+plt.imshow(maze_array, cmap="binary") 
+plt.title("Visualización del Laberinto")
+plt.xticks([])
+plt.yticks([])  
+plt.grid(visible=False)  
+plt.show()
+
 
 class DNA:
     def __init__(self, num_individuos, num_seleccion, num_generacion, tasa_mutacion):
         self.num_individuos = num_individuos
         self.num_seleccion = num_seleccion
         self.num_generacion = num_generacion
-        self.tasa_mutacion = tasa_mutacion  # Renombrado de "mutacion" a "tasa_mutacion"
-        self.direccion = ['arriba', 'abajo', 'izquierda', 'derecha']  # Movimientos posibles
+        self.tasa_mutacion = tasa_mutacion 
+        self.direccion = ['arriba', 'abajo', 'izquierda', 'derecha']  
 
+    # El ratón se representa como una lista de movimientos, donde cada movimiento es aleatorio
     def crear_raton(self):
-        # El ratón se representa como una lista de movimientos, donde cada movimiento es aleatorio
-        return [random.choice(self.direccion) for _ in range(50)]  # 50 movimientos como ejemplo
+        
+        return [random.choice(self.direccion) for _ in range(50)]  
 
     def crear_poblacion(self):
         return [self.crear_raton() for _ in range(self.num_individuos)]
 
+    # Retornar la distancia del ratón a la meta (no optimo)
     def fitness(self, raton):
         x, y = start
         for movimiento in raton:
-            if movimiento == 'arriba' and x > 0 and laberinto[x-1][y] == 0:
+            if movimiento == 'arriba' and x > 0 and maze[x-1][y] == 0:
                 x -= 1
-            elif movimiento == 'abajo' and x < len(laberinto)-1 and laberinto[x+1][y] == 0:
+            elif movimiento == 'abajo' and x < len(maze)-1 and maze[x+1][y] == 0:
                 x += 1
-            elif movimiento == 'izquierda' and y > 0 and laberinto[x][y-1] == 0:
+            elif movimiento == 'izquierda' and y > 0 and maze[x][y-1] == 0:
                 y -= 1
-            elif movimiento == 'derecha' and y < len(laberinto[0])-1 and laberinto[x][y+1] == 0:
+            elif movimiento == 'derecha' and y < len(maze[0])-1 and maze[x][y+1] == 0:
                 y += 1
 
             # Si llega a la meta, la evaluación es máxima
             if (x, y) == goal:
                 return 100
 
-        # Retornar la distancia del ratón a la meta
         return - (abs(x - goal[0]) + abs(y - goal[1]))
 
+    #Recibe una poblacion en la cual se optiene la poblacion para despues ordenarla y seleccionar en base al numero de la seleccion
     def seleccion(self, poblacion):
         puntuacion = [(self.fitness(raton), raton) for raton in poblacion]
         puntuacion.sort(reverse=True, key=lambda x: x[0])
@@ -64,18 +95,21 @@ class DNA:
 
     def mutacion(self, poblacion):
         for i in range(len(poblacion)):
-            if random.random() < self.tasa_mutacion:  # Se usa tasa_mutacion en lugar de mutacion
+            if random.random() < self.tasa_mutacion:  
                 punto = random.randint(0, len(poblacion[i]) - 1)
                 poblacion[i][punto] = random.choice(self.direccion)
         return poblacion
 
     def mostrar_laberinto(self, x, y):
-        # Crea una copia del laberinto y marca la posición del ratón
-        laberinto_temp = laberinto.copy()
-        laberinto_temp[x][y] = 2  # Marca al ratón con un 2
-        for row in laberinto_temp:
-            print(' '.join(str(cell) for cell in row))
-        print()  # Línea vacía para separar las representaciones del laberinto
+        maze_copy = maze_array.copy()
+        maze_copy[x, y] = 2 
+
+        plt.imshow(maze_copy, cmap="cool")
+        plt.xticks([])
+        plt.yticks([])
+        plt.grid(visible=False)
+        plt.pause(0.1)  
+
 
     def run_genetico(self):
         poblacion = self.crear_poblacion()
@@ -93,28 +127,26 @@ class DNA:
             # Simulación del recorrido del ratón
             x, y = start
             for movimiento in mejores_raton:
-                if movimiento == 'arriba' and x > 0 and laberinto[x-1][y] == 0:
+                if movimiento == 'arriba' and x > 0 and maze[x-1][y] == 0:
                     x -= 1
-                elif movimiento == 'abajo' and x < len(laberinto)-1 and laberinto[x+1][y] == 0:
+                elif movimiento == 'abajo' and x < len(maze)-1 and maze[x+1][y] == 0:
                     x += 1
-                elif movimiento == 'izquierda' and y > 0 and laberinto[x][y-1] == 0:
+                elif movimiento == 'izquierda' and y > 0 and maze[x][y-1] == 0:
                     y -= 1
-                elif movimiento == 'derecha' and y < len(laberinto[0])-1 and laberinto[x][y+1] == 0:
+                elif movimiento == 'derecha' and y < len(maze[0])-1 and maze[x][y+1] == 0:
                     y += 1
 
-                # Mostrar el laberinto en cada paso
+                
                 self.mostrar_laberinto(x, y)
-
-                # Si llega a la meta, detener el recorrido
                 if (x, y) == goal:
                     print("¡El ratón ha llegado a la meta!")
+                    plt.ioff()
+                    plt.show()
                     break
 
 def main():
-    # Inicializar el algoritmo genético
     model = DNA(num_individuos=10, num_seleccion=5, num_generacion=50, tasa_mutacion=0.05)
     
-    # Ejecutar el algoritmo genético
     model.run_genetico()
 
 if __name__ == '__main__':
