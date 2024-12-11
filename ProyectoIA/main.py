@@ -2,39 +2,36 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
-
-
 maze = [
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,2,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1],
-    [1,1,1,0,1,0,1,1,1,1,0,1,1,1,0,1,0,1,1,1],
-    [1,0,0,0,1,0,1,0,0,1,0,0,0,0,0,1,0,0,0,1],
-    [1,0,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,0,1],
-    [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1],
-    [1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,1],
-    [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1],
-    [1,0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,1],
-    [1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1],
-    [1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1],
-    [1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,0,1],
-    [1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,1],
-    [1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1],
-    [1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1],
-    [1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
-    [1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 2, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1],
+    [1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
 
-
-start = (1,1)
-goal = (18,18)
+start = (1, 1)  
+goal = (18, 19)  
 
 maze_array = np.array(maze)
 
-
-plt.figure(figsize=(10,10))
+plt.ion()  # Activar modo interactivo para visualizaciones dinámicas
+plt.figure(figsize=(10, 10))
 plt.imshow(maze_array, cmap="binary") 
 plt.title("Visualización del Laberinto")
 plt.xticks([])
@@ -53,15 +50,15 @@ class DNA:
 
     # El ratón se representa como una lista de movimientos, donde cada movimiento es aleatorio
     def crear_raton(self):
-        
-        return [random.choice(self.direccion) for _ in range(50)]  
+        return [random.choice(self.direccion) for _ in range(100)]  
 
     def crear_poblacion(self):
         return [self.crear_raton() for _ in range(self.num_individuos)]
 
-    # Retornar la distancia del ratón a la meta (no optimo)
+    # Retornar la distancia del ratón a la meta (mejorado)
     def fitness(self, raton):
         x, y = start
+        pasos = 0
         for movimiento in raton:
             if movimiento == 'arriba' and x > 0 and maze[x-1][y] == 0:
                 x -= 1
@@ -72,11 +69,12 @@ class DNA:
             elif movimiento == 'derecha' and y < len(maze[0])-1 and maze[x][y+1] == 0:
                 y += 1
 
-            # Si llega a la meta, la evaluación es máxima
+            pasos += 1
             if (x, y) == goal:
-                return 100
+                return 1000 - pasos  # Penalizar pasos adicionales
 
-        return - (abs(x - goal[0]) + abs(y - goal[1]))
+        return - (abs(x - goal[0]) + abs(y - goal[1]))  
+
 
     #Recibe una poblacion en la cual se optiene la poblacion para despues ordenarla y seleccionar en base al numero de la seleccion
     def seleccion(self, poblacion):
@@ -136,17 +134,15 @@ class DNA:
                 elif movimiento == 'derecha' and y < len(maze[0])-1 and maze[x][y+1] == 0:
                     y += 1
 
-                
                 self.mostrar_laberinto(x, y)
                 if (x, y) == goal:
                     print("¡El ratón ha llegado a la meta!")
-                    plt.ioff()
-                    plt.show()
-                    break
+                    plt.ioff()  
+                    plt.close()  
+                    return
 
 def main():
-    model = DNA(num_individuos=10, num_seleccion=5, num_generacion=50, tasa_mutacion=0.05)
-    
+    model = DNA(num_individuos=50, num_seleccion=10, num_generacion=200, tasa_mutacion=0.1)  # Incrementar población y generaciones
     model.run_genetico()
 
 if __name__ == '__main__':
